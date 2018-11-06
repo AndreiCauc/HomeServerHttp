@@ -13,7 +13,9 @@ def disable():
     WARNING = ''
     FAIL = ''
     ENDC = ''
-
+def debug(message):
+	print("{}[DEBUG]{}{}".format(OKBLUE, message, ENDC))
+	
 def info(title, message):
 	print("{}[INFO][{}] {}{}".format(OKBLUE, title, message, ENDC))
 

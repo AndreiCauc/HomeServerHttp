@@ -23,15 +23,8 @@ class server(object):
 	def StartServer(self):
 		self._ServerOn = True
 		httpd = SocketServer.TCPServer(("", self._PORT), ServerHandler)
-		print "Server listening at ", self._PORT
+		log.success("Server", "Server is on [{0}]".format(self._PORT));
 		httpd.serve_forever()
-
-		#initializing services
-		log.success("Server", "Initalizing services")
-		for string in self._services_array:
-			self._services[string] = __import__("{}.service".format(string)).service.service()
-
-		log.success("Server", "Server is on")
 		return
 
 	def CloseServer(self):

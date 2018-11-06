@@ -9,7 +9,7 @@ import server
 
 
 
-config_array = ["timer", "lighting", "water"]
+config_array = ["lighting"]
 
 PORT = 8080
 myServer = server.server(PORT, config_array, 0)
