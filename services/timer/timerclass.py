@@ -1,0 +1,81 @@
+import sys
+sys.path.append('../../')
+import pygame
+from timer import *
+import threading
+import time
+from classes import log
+
+class timerclass(object):
+	def __init__(self, snooze_time):
+		self._snoozeTime = snooze_time
+		self._timerOn = False
+		self._alarmOn = False
+		self._timers = []
+		self._removeTimers = []
+		#pygame.init()
+		#self._music = pygame.mixer.Sound("../../sound.wav")
+
+	def AddTimer(self, tm, repeat, week, mess = ""):
+		self._timers.append(timer(tm, repeat, week, mess))
+		log.info("Timer", "Timer has beed added")
+		return("Timer added.")
+
+	def StartTimer(self):
+		log.success("Timer", "Starting timer")
+		if self._timerOn == False:
+			self._timerOn = True
+			timer_thread = threading.Thread(target = self.CheckForTime)
+			timer_thread.start()
+			return("The timer thread is opened")
+		else:
+			return("The timer is allready on")
+
+	def CheckForTime(self):
+		while self._timerOn == True:
+			for tmr in self._timers:
+				#log.info("Timer", "check {} - {} ".format(tmr.time, time.strftime("%H%M")))
+				if tmr.time == int(time.strftime("%H%M")):
+					self.StartAlarm()
+					if ( tmr.message != "" ):
+						log.info("Alarm", tmr.message)
+					if tmr.repeat == False:
+						#self._timers.remove(tmr)
+						self._removeTimers.append(tmr)
+		
+			for tmr in self._removeTimers:
+				self._timers.remove(tmr)
+			self._removeTimers = []
+			
+			if self._alarmOn == True:
+				log.info("Alarm", "Ring!")
+				#if int(pygame.mixer.get_busy()) == 0:
+	                                #self._music.play()
+			time.sleep(1)
+
+
+	def StartAlarm(self):
+		if self._alarmOn == False:
+			self._alarmOn = True
+			#if int(pygame.mixer.get_busy()) == 0:
+	        	        #self._music.play()
+		return
+
+	def StopAlarm(self):
+		if self._alarmOn == True:
+			self._alarmOn = False
+			#if int(pygame.mixer.get_busy()) == 1:
+				#self._music.stop()
+			return ("Alarm has stopped")
+		return "Alarm is allready off"
+
+	def StopTimer(self):
+		if self._timerOn == True:
+			self._timerOn = False
+			#if int(pygame.mixer.get_busy()) == 1:
+                                #self._music.stop()
+			return ("Timer thread is now closed!")
+		return "Timer is allready off"
+		
+#	def TestSound(self):
+		#self._music.play()
